@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MovieDB</string>
+    <string name="sort_by_popularity">Sort By Popularity</string>
+    <string name="sort_by_ratings">Sort By Ratings</string>
+    <string name="new_movies">New Movies</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="my_favorites">My Favorites</string>
+    <string name="movie_review">Movie Review</string>
+    <string name="watch_trailer_1">watch Trailer 1</string>
+    <string name="watch_trailer_2">watch Trailer 2</string>
+    <string name="movie_poster">Movie Poster</string>
+    <string name="add_to_favorite">Add to Favorite</string>
+</resources>
