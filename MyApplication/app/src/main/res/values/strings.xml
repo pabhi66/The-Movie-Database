@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">The Movie Data Base</string>
+    <string name="action_settings">Settings</string>
+    <string name="popular_movies">Popular</string>
+    <string name="top_rated_movies">Top Rated</string>
+    <string name="favorite_movies">Favorites</string>
+    <string name="new_movies">New Movies</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="large_text">
+        "Material is the metaphor.\n\n"
+    </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_movie_detail">MovieDetail</string>
+</resources>
