@@ -72,6 +72,16 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp" />
 
+            <TextView
+                android:id="@+id/rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/duration"
+                android:layout_toRightOf="@id/image"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp" />
+
         </RelativeLayout>
 
         <!--<View-->
@@ -281,6 +291,49 @@
             android:layout_marginTop="16dp"
             android:background="#20000000"
             android:padding="8dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <Button
+                android:id="@+id/trailer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trailer 1"
+                android:layout_alignBaseline="@+id/trailer1"
+                android:layout_alignBottom="@+id/trailer1"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp" />
+
+            <Button
+                android:id="@+id/trailer1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trailer 2"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/trailer" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="#20000000"
+            android:padding="8dp" />
+
+        <TextView
+            android:id="@+id/reviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="16dp" />
 
     </LinearLayout>
 

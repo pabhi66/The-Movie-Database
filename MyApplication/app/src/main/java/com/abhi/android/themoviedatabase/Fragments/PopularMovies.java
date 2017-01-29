@@ -1,6 +1,7 @@
 package com.abhi.android.themoviedatabase.Fragments;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -22,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -147,6 +149,7 @@ public class PopularMovies extends Fragment implements LoaderManager.LoaderCallb
 
                 for(int i = 0; i < arrayResult.length(); i++){
                     JSONObject movie = arrayResult.getJSONObject(i);
+
                     String movie_name = movie.getString("original_title");
                     int movie_id = movie.getInt("id");
                     String movie_poster_path = TinyUrls.image_path + movie.getString("poster_path");

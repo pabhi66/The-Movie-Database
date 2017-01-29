@@ -1,5 +1,6 @@
 package com.abhi.android.themoviedatabase.Activity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -41,29 +42,29 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
 
     private static final int TRAILER_LOADER = 4;
     private static final int REVIEW_LOADER = 5;
+    private static final int MOVIE_LOADER = 6;
 
-    private String trailer1, trailer2, reviews;
+    private String trailer1, trailer2;
 
     private String movie_name, movie_poster_path, movie_backdrop_path, movie_plot, movie_rating, movie_release_date;
+    private String movie_details;
 
     @BindView(R.id.title)
     TextView movieName;
     @BindView(R.id.image)
     ImageView imageView;
-//    @BindView(R.id.rating)
-//    TextView rating;
+    @BindView(R.id.rate)
+    TextView rating;
     @BindView(R.id.date_status)
     TextView release_date;
     @BindView(R.id.overview)
     TextView plot;
     @BindView(R.id.tagline) TextView tagline;
     @BindView(R.id.duration) TextView runtime;
-//    @BindView(R.id.trailer)
-//    Button trailer_button;
-//    @BindView(R.id.trailer1)
-//    Button trailer_button2;
-//    @BindView(R.id.reviews)
-//    TextView reviews;
+    @BindView(R.id.trailer) Button trailer_button;
+    @BindView(R.id.trailer1) Button trailer_button2;
+    @BindView(R.id.reviews)
+    TextView reviews;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -80,6 +81,22 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        initCollapsingToolbar();
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
         try {
             movieJSONString = getIntent().getStringExtra("movie");
             movie = new JSONObject(movieJSONString);
@@ -87,10 +104,14 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
             movie_name = movie.getString("original_title");
             int movie_id = movie.getInt("id");
 
-//            String url = TinyUrls.movie_url + movie_id + TinyUrls.review_addon + Utils.API_KEY;
-//            executeLoader("reviews",url,REVIEW_LOADER);
-//            url = TinyUrls.movie_url + movie_id + "/videos?api_key=" + Utils.API_KEY;
-//            executeLoader("trailers",url,TRAILER_LOADER);
+            String url = TinyUrls.movie_url + movie_id + TinyUrls.review_addon + Utils.API_KEY;
+            executeLoader("reviews",url,REVIEW_LOADER);
+            url = TinyUrls.movie_url + movie_id + "/videos?api_key=" + Utils.API_KEY;
+            executeLoader("trailers",url,TRAILER_LOADER);
+
+            url = "https://api.themoviedb.org/3/movie/" + movie_id + "?api_key=" + Utils.API_KEY;
+            executeLoader("movie",url,MOVIE_LOADER);
+
 
             movie_poster_path = movie.getString("poster_path");
             movie_backdrop_path = movie.getString("backdrop_path");
@@ -107,28 +128,39 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
             movieName.setText(movie_name);
             plot.setText(movie_plot);
             release_date.setText(movie_release_date);
-            tagline.setText(movie_rating);
+
+            trailer_button.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    launchTrailer(trailer1);
+                }
+            });
+
+            trailer_button2.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    launchTrailer(trailer2);
+                }
+            });
 
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
 
-        initCollapsingToolbar();
+    /**
+     * launch trailer when trailer button is clicked
+     * @param url trailer link
+     */
+    private void launchTrailer(String url){
+        Uri webpage = Uri.parse(url);
+        Intent intent= new Intent(Intent.ACTION_VIEW, webpage);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        if(intent.resolveActivity(getPackageManager()) != null){
+            startActivity(intent);
+        }
     }
 
     /**
@@ -180,10 +212,12 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
             @Override
             public String loadInBackground() {
                 String url = "";
-                if (id == 1) {
+                if (id == TRAILER_LOADER) {
                     url = args.getString("trailers");
-                } else if (id == 3) {
+                } else if (id == REVIEW_LOADER) {
                     url = args.getString("reviews");
+                }else if(id == MOVIE_LOADER ){
+                    url = args.getString("movie");
                 }
 
                 if (url == null || url.isEmpty())
@@ -223,19 +257,27 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
                 String[] review = Utils.getPathsFromJSON(data, "content");
 
                 if (authors.length == 0 || review.length == 0) {
-                    //reviews.setText(R.string.no_reviews);
+                    reviews.setText("There are no reviews for this movie");
                 } else {
                     StringBuilder sb = new StringBuilder();
                     for (int i = 0; i < review.length; i++) {
                         sb.append(authors[i]).append(": ").append(review[i]).append("\n===============================\n");
                     }
 
-                    reviews = sb.toString();
-
-                    //reviews.setText(sb.toString());
+                    reviews.setText(sb.toString());
                 }
 
 
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }else if(loader.getId() == MOVIE_LOADER){
+            movie_details = data;
+            try {
+                movie = new JSONObject(data);
+                tagline.setText("\"" + movie.getString("tagline") + "\"");
+                runtime.setText(movie.getString("runtime") + " minutes");
+                rating.setText(movie.getString("vote_average") + "/10");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
