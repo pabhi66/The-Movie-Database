@@ -13,17 +13,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.abhi.android.themoviedatabase.Adapter.MovieViewAdapter;
 import com.abhi.android.themoviedatabase.Model.Movie;
 import com.abhi.android.themoviedatabase.R;
 import com.abhi.android.themoviedatabase.Utils.TinyUrls;
 import com.abhi.android.themoviedatabase.Utils.Utils;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
