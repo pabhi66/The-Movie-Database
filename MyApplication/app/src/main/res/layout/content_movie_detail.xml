@@ -292,34 +292,28 @@
             android:background="#20000000"
             android:padding="8dp" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:weightSum="1">
 
             <Button
                 android:id="@+id/trailer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Trailer 1"
-                android:layout_alignBaseline="@+id/trailer1"
-                android:layout_alignBottom="@+id/trailer1"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp" />
+                android:layout_marginStart="20dp"
+                android:layout_weight="0.34" />
 
             <Button
                 android:id="@+id/trailer1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Trailer 2"
-                android:layout_marginRight="20dp"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/trailer" />
+                android:layout_weight="0.39" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"

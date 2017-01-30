@@ -1,5 +1,6 @@
 package com.abhi.android.themoviedatabase.Activity;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,21 +11,26 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RatingBar;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
-
 import com.abhi.android.themoviedatabase.R;
+import com.abhi.android.themoviedatabase.Utils.SaveFavorites;
 import com.abhi.android.themoviedatabase.Utils.TinyUrls;
 import com.abhi.android.themoviedatabase.Utils.Utils;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -44,6 +50,9 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
     private static final int REVIEW_LOADER = 5;
     private static final int MOVIE_LOADER = 6;
 
+    private ShareActionProvider mShareActionProvider;
+
+    int menuClickeddCount = 0;
     private String trailer1, trailer2;
 
     private String movie_name, movie_poster_path, movie_backdrop_path, movie_plot, movie_rating, movie_release_date;
@@ -81,16 +90,7 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        initCollapsingToolbar();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -100,6 +100,40 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
         try {
             movieJSONString = getIntent().getStringExtra("movie");
             movie = new JSONObject(movieJSONString);
+
+            final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            initCollapsingToolbar();
+            if(MainActivity.favorite_movies.containsKey(movie.getString("original_title"))){
+                menuClickeddCount = 1;
+                fab.setImageResource(R.drawable.heart_filled);
+            }
+
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(menuClickeddCount == 0){
+                        Snackbar.make(view, "Movie Added to favorite", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                        menuClickeddCount = 1;
+                        fab.setImageResource(R.drawable.heart_filled);
+
+                        ContentValues values = new ContentValues();
+                        values.put(SaveFavorites.title,movie_name);
+                        values.put(SaveFavorites.movieJson, movieJSONString);
+
+                        getContentResolver().insert(SaveFavorites.CONTENT_URL,values);
+                        MainActivity.getMovies();
+
+                    }else if(menuClickeddCount == 1){
+                        menuClickeddCount = 0;
+                        Snackbar.make(view, "Movie removied from favorites", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                        fab.setImageResource(R.drawable.heart_empty);
+                        getContentResolver().delete(Uri.parse(SaveFavorites.URL), "title=?", new String[]{movie_name});
+                        MainActivity.getMovies();
+                    }
+                }
+            });
 
             movie_name = movie.getString("original_title");
             int movie_id = movie.getInt("id");
@@ -150,6 +184,8 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
         }
     }
 
+
+
     /**
      * launch trailer when trailer button is clicked
      * @param url trailer link
@@ -170,7 +206,7 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
     private void initCollapsingToolbar() {
         final CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        collapsingToolbar.setTitle(movie_name);
+        collapsingToolbar.setTitle("");
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         appBarLayout.setExpanded(true);
 
@@ -188,7 +224,7 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
                     collapsingToolbar.setTitle(movie_name);
                     isShow = true;
                 } else if (isShow) {
-                    collapsingToolbar.setTitle(" ");
+                    collapsingToolbar.setTitle("");
                     isShow = false;
                 }
             }
