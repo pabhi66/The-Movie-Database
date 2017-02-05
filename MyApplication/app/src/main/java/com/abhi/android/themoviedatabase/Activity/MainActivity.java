@@ -13,14 +13,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.abhi.android.themoviedatabase.Fragments.FavoriteMovies;
 import com.abhi.android.themoviedatabase.Fragments.MainActivityFragment;
 import com.abhi.android.themoviedatabase.Fragments.NewMovies;
 import com.abhi.android.themoviedatabase.Fragments.PopularMovies;
+import com.abhi.android.themoviedatabase.Fragments.SearchFragment;
 import com.abhi.android.themoviedatabase.Fragments.TopRatedMovies;
 import com.abhi.android.themoviedatabase.R;
 import com.abhi.android.themoviedatabase.Utils.SaveFavorites;
+import com.abhi.android.themoviedatabase.Utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     static ContentResolver resolver;
     public static HashMap<String, String> favorite_movies;
 
+    public static String searchQuery;
+
 
     private int[] tabIcons = {
             R.drawable.popular_movies,
@@ -46,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Utils.getDeviceSize(this);
 
         resolver = getContentResolver();
         getMovies();
@@ -83,7 +88,9 @@ public class MainActivity extends AppCompatActivity {
                 String movieJson = cursor.getString(cursor.getColumnIndex("movieJson"));
                 favorite_movies.put(title,movieJson);
             }while (cursor.moveToNext());
+
         }
+
 
         cursor.close();
     }
@@ -119,7 +126,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_search) {
+            //getFragmentManager().beginTransaction().replace(R.id.main, new SearchFragment()).commit();
             return true;
         }
 

@@ -1,5 +1,6 @@
 package com.abhi.android.themoviedatabase.Fragments;
 
+import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -9,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.abhi.android.themoviedatabase.Activity.MainActivity;
 import com.abhi.android.themoviedatabase.Adapter.MovieViewAdapter;
 import com.abhi.android.themoviedatabase.Model.Movie;
@@ -32,6 +32,7 @@ public class FavoriteMovies extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private GridLayoutManager mGridLayoutManager;
+    public static int imageSize;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,7 +44,17 @@ public class FavoriteMovies extends Fragment {
 
         mAdapter = new MovieViewAdapter(getActivity(), mMovieList);
 
-        mGridLayoutManager = new GridLayoutManager(getActivity(),2);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            mGridLayoutManager = new GridLayoutManager(getActivity(),6);
+            imageSize = 1;
+        }else if(Utils.screenSize >= 5) {
+            mGridLayoutManager = new GridLayoutManager(getActivity(),5);
+            imageSize = 2;
+        }else{
+            mGridLayoutManager = new GridLayoutManager(getActivity(),3);
+            imageSize = 3;
+        }
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext()));
         mRecyclerView.setLayoutManager(mGridLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());

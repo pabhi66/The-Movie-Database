@@ -1,7 +1,9 @@
 package com.abhi.android.themoviedatabase.Fragments;
 
 
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -13,6 +15,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import com.abhi.android.themoviedatabase.Adapter.MovieViewAdapter;
 import com.abhi.android.themoviedatabase.Model.Movie;
 import com.abhi.android.themoviedatabase.R;
@@ -39,6 +43,7 @@ public class NewMovies extends Fragment implements LoaderManager.LoaderCallbacks
     private boolean loading = true;
     private int visibleThreshold = 4;
     private int pageCount = 1;
+    public static int imageSize;
 
 
     private static final int TOP_MOVIE_LOADER = 2;
@@ -49,14 +54,31 @@ public class NewMovies extends Fragment implements LoaderManager.LoaderCallbacks
         // Inflate the layout for this fragment
         mRecyclerView = (RecyclerView)  inflater.inflate(R.layout.content_main, container, false);
 
+
+
         mMovieList = new ArrayList<>();
         mAdapter = new MovieViewAdapter(getActivity(), mMovieList);
 
-        mGridLayoutManager = new GridLayoutManager(getActivity(),2);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            mGridLayoutManager = new GridLayoutManager(getActivity(),6);
+            imageSize = 1;
+        }else if(Utils.screenSize >= 5) {
+            mGridLayoutManager = new GridLayoutManager(getActivity(),5);
+            imageSize = 2;
+        }else{
+            mGridLayoutManager = new GridLayoutManager(getActivity(),3);
+            imageSize = 3;
+        }
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext()));
         mRecyclerView.setLayoutManager(mGridLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
+
+        if(!Utils.isInternetAvailable(getContext())){
+            Toast.makeText(getContext(),"No Internet Connection",Toast.LENGTH_LONG).show();
+            return mRecyclerView;
+        }
 
 
         String url = TinyUrls.new_movies + Utils.API_KEY + "&language=en-US";
@@ -166,6 +188,8 @@ public class NewMovies extends Fragment implements LoaderManager.LoaderCallbacks
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }else if(!Utils.isInternetAvailable(getContext())){
+            Toast.makeText(getContext(),"No Internet Connection", Toast.LENGTH_SHORT).show();
         }
     }
 

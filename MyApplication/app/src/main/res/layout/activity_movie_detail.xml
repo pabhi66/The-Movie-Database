@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.abhi.android.themoviedatabase.Activity.MovieDetail">
+    tools:context="com.abhi.android.themoviedatabase.Fragments.MovieDetail">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -25,6 +25,7 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
+
 
             <ImageView
                 android:id="@+id/backdrop"

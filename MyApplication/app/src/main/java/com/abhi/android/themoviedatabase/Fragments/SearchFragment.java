@@ -1,9 +1,7 @@
 package com.abhi.android.themoviedatabase.Fragments;
 
 
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -15,8 +13,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Toast;
 import com.abhi.android.themoviedatabase.Adapter.MovieViewAdapter;
 import com.abhi.android.themoviedatabase.Model.Movie;
 import com.abhi.android.themoviedatabase.R;
@@ -26,10 +22,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 
-public class PopularMovies extends Fragment implements LoaderManager.LoaderCallbacks<String>{
+public class SearchFragment extends Fragment implements LoaderManager.LoaderCallbacks<String>{
 
     private ArrayList<Movie> mMovieList;
     private RecyclerView mRecyclerView;
@@ -40,9 +37,9 @@ public class PopularMovies extends Fragment implements LoaderManager.LoaderCallb
     private boolean loading = true;
     private int visibleThreshold = 4;
     private int pageCount = 1;
-    public static int imageSize;
 
-    private static final int POPULAR_MOVIE_LOADER = 1;
+
+    private static final int POPULAR_MOVIE_LOADER = 10;
 
 
     @Override
@@ -51,67 +48,20 @@ public class PopularMovies extends Fragment implements LoaderManager.LoaderCallb
         // Inflate the layout for this fragment
         mRecyclerView = (RecyclerView)  inflater.inflate(R.layout.content_main, container, false);
 
-
-
         mMovieList = new ArrayList<>();
         mAdapter = new MovieViewAdapter(getActivity(), mMovieList);
 
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            mGridLayoutManager = new GridLayoutManager(getActivity(),6);
-            imageSize = 1;
-        }else if(Utils.screenSize >= 5) {
-            mGridLayoutManager = new GridLayoutManager(getActivity(),5);
-            imageSize = 2;
-        }else{
-            mGridLayoutManager = new GridLayoutManager(getActivity(),3);
-            imageSize = 3;
-        }
-
-
+        mGridLayoutManager = new GridLayoutManager(getActivity(),2);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext()));
         mRecyclerView.setLayoutManager(mGridLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
 
 
-
-        if(!Utils.isInternetAvailable(getContext())){
-            Toast.makeText(getContext(),"No Internet Connection",Toast.LENGTH_LONG).show();
-            return mRecyclerView;
-        }
-
-
-
-
         String url = TinyUrls.popular_movies + Utils.API_KEY;
+        url = "https://api.themoviedb.org/3/search/movie?api_key=" + Utils.API_KEY + "&language=en-US&query=" + "bodyguard" + "&page=1&include_adult=false";
 
         executeLoader("movies", url,POPULAR_MOVIE_LOADER);
-
-
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                visibleItemCount = mRecyclerView.getChildCount();
-                totalItemCount = mGridLayoutManager.getItemCount();
-                firstVisibleItem = mGridLayoutManager.findFirstVisibleItemPosition();
-
-                if (loading) {
-                    if (totalItemCount > previousTotal) {
-                        loading = false;
-                        previousTotal = totalItemCount;
-                        pageCount++;
-                    }
-                }
-                if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-                    String url = TinyUrls.popular_movies + Utils.API_KEY + "&page=" + String.valueOf(pageCount);
-                    executeLoader("movies", url, POPULAR_MOVIE_LOADER);
-                    loading = true;
-                }
-
-            }
-        });
 
 
         return mRecyclerView;
@@ -138,6 +88,7 @@ public class PopularMovies extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public Loader<String> onCreateLoader(int id, final Bundle args) {
         return new AsyncTaskLoader<String>(getContext()) {
+
             @Override
             protected void onStartLoading() {
                 super.onStartLoading();
@@ -190,8 +141,6 @@ public class PopularMovies extends Fragment implements LoaderManager.LoaderCallb
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }else if(!Utils.isInternetAvailable(getContext())){
-            Toast.makeText(getContext(),"No Internet Connection", Toast.LENGTH_SHORT).show();
         }
     }
 
