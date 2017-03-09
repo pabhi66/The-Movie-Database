@@ -27,6 +27,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * main activity of the app
+ */
+
 public class MainActivity extends AppCompatActivity {
 
 
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public static String searchQuery;
 
 
+    //load icons on top of the tool bar
     private int[] tabIcons = {
             R.drawable.popular_movies,
             R.drawable.top_rated,
@@ -50,8 +55,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //get device size
         Utils.getDeviceSize(this);
 
+        //get content resolver and load user's favorite stored movies
         resolver = getContentResolver();
         getMovies();
 
@@ -60,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
+        //set up view pager
         ViewPager mPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(mPager);
 
@@ -95,6 +103,9 @@ public class MainActivity extends AppCompatActivity {
         cursor.close();
     }
 
+    /**
+     * set tab icons on the tool bar
+     */
     private void setupTabIcons() {
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
@@ -102,6 +113,10 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(3).setIcon(tabIcons[3]);
     }
 
+    /**
+     * set up view pager
+     * @param viewPager view pager
+     */
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new PopularMovies(), "Popular");

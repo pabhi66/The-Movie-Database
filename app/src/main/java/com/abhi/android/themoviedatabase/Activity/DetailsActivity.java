@@ -10,7 +10,7 @@ import com.abhi.android.themoviedatabase.Fragments.MovieDetail;
 import com.abhi.android.themoviedatabase.R;
 
 /**
- * Created by abhi on 2/4/17.
+ * Details activity which calls details activity fragment
  */
 
 public class DetailsActivity extends AppCompatActivity {

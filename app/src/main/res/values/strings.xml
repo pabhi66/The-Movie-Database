@@ -10,6 +10,9 @@
         "Material is the metaphor.\n\n"
     </string>
 
+    <string name="text_header">Text</string>
+    <string name="flexible_title">Flexible space</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_movie_detail"> </string>

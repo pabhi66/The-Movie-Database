@@ -41,7 +41,6 @@ public class PopularMovies extends Fragment implements LoaderManager.LoaderCallb
     private int visibleThreshold = 4;
     private int pageCount = 1;
     public static int imageSize;
-
     private static final int POPULAR_MOVIE_LOADER = 1;
 
 
@@ -204,6 +203,4 @@ public class PopularMovies extends Fragment implements LoaderManager.LoaderCallb
     public void onLoaderReset(Loader<String> loader) {
 
     }
-
-
 }

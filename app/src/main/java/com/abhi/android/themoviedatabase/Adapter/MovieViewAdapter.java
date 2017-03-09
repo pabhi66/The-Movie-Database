@@ -70,7 +70,7 @@ public class MovieViewAdapter extends RecyclerView.Adapter<MovieViewAdapter.MyVi
             Picasso.with(mContext).load(movie.getMovie_poster_path()).resize(200,460).into(holder.thumbnail);
         }
         else{
-            Picasso.with(mContext).load(movie.getMovie_poster_path()).resize(200,460).into(holder.thumbnail);
+            Picasso.with(mContext).load(movie.getMovie_poster_path()).resize(200,560).into(holder.thumbnail);
         }
 
         //setAnimation(holder.itemView, position);

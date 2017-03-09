@@ -2,15 +2,16 @@ package com.abhi.android.themoviedatabase.Fragments;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -23,7 +24,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
-
 import com.abhi.android.themoviedatabase.Activity.DetailsActivity;
 import com.abhi.android.themoviedatabase.Activity.MainActivity;
 import com.abhi.android.themoviedatabase.R;
@@ -35,6 +35,7 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.picasso.Picasso;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
@@ -73,6 +74,8 @@ public class MovieDetail extends Fragment implements LoaderManager.LoaderCallbac
     @BindView(R.id.trailer1) Button trailer_button2;
     @BindView(R.id.reviews)
     TextView reviews;
+
+    @BindView(R.id.genres) TextView genres;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -98,13 +101,19 @@ public class MovieDetail extends Fragment implements LoaderManager.LoaderCallbac
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_movie_detail,container,false);
+        view = inflater.inflate(R.layout.details_fragment,container,false);
 
         ButterKnife.bind(MovieDetail.this, view);
 
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
+
 
 
 
@@ -203,7 +212,7 @@ public class MovieDetail extends Fragment implements LoaderManager.LoaderCallbac
         final CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) view.findViewById(R.id.toolbar_layout);
 
-        collapsingToolbar.setTitle("");
+        collapsingToolbar.setTitle(movie_name);
         AppBarLayout appBarLayout = (AppBarLayout) view.findViewById(R.id.app_bar);
         appBarLayout.setExpanded(true);
 
@@ -219,9 +228,11 @@ public class MovieDetail extends Fragment implements LoaderManager.LoaderCallbac
                 }
                 if (scrollRange + verticalOffset == 0) {
                     collapsingToolbar.setTitle(movie_name);
+                    view.findViewById(R.id.fab).setVisibility(View.GONE);
                     isShow = true;
                 } else if (isShow) {
-                    collapsingToolbar.setTitle("");
+                    collapsingToolbar.setTitle(movie_name);
+                    view.findViewById(R.id.fab).setVisibility(View.VISIBLE);
                     isShow = false;
                 }
             }
@@ -311,6 +322,18 @@ public class MovieDetail extends Fragment implements LoaderManager.LoaderCallbac
                 String movie_backdrop_path = movie.getString("backdrop_path");
                 String movie_plot = movie.getString("overview");
                 String movie_release_date = movie.getString("release_date");
+                StringBuilder genres = new StringBuilder();
+                genres.append("");
+                JSONArray genresArray = new JSONArray(movie.getString("genres"));
+                for(int i = 0; i < genresArray.length(); i++){
+                    JSONObject jsonobject = genresArray.getJSONObject(i);
+                    if(i != genresArray.length()-1) {
+                        genres.append(jsonobject.getString("name")).append(", ");
+                    }else{
+                        genres.append(jsonobject.getString("name"));
+                    }
+                }
+
 
                 String posterURL = "https://image.tmdb.org/t/p/w185" + movie_poster_path;
                 String backdropURL;
@@ -323,16 +346,18 @@ public class MovieDetail extends Fragment implements LoaderManager.LoaderCallbac
                 Picasso.with(getContext()).load(backdropURL).into((ImageView) view.findViewById(R.id.backdrop));
                 Picasso.with(getContext()).load(posterURL).into(imageView);
 
-                movieName.setText(movie_name);
+
                 plot.setText(movie_plot);
                 release_date.setText(movie_release_date);
 
                 tagline.setText("\"" + movie.getString("tagline") + "\"");
                 runtime.setText(String.format("%s minutes", movie.getString("runtime")));
                 rating.setText(String.format("%s/10", movie.getString("vote_average")));
+                this.genres.setText(genres.toString());
 
 
                 movie_name = movie.getString("original_title");
+                movieName.setText(movie_name);
                 int movie_id = movie.getInt("id");
 
                 String url = TinyUrls.movie_url + movie_id + TinyUrls.review_addon + Utils.API_KEY;
