@@ -13,4 +13,5 @@ public class TinyUrls {
     public static String movie_url = "https://api.themoviedb.org/3/movie/";
     public static String review_addon = "/reviews?api_key=";
     public static String youtube = "https://www.youtube.com/watch?v=";
+    public static String youtubeImage = "http://img.youtube.com/vi/";
 }

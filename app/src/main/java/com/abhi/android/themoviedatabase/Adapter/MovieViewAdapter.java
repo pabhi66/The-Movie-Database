@@ -65,12 +65,12 @@ public class MovieViewAdapter extends RecyclerView.Adapter<MovieViewAdapter.MyVi
         if(PopularMovies.imageSize == 1 || TopRatedMovies.imageSize == 1 || NewMovies.imageSize == 1 || FavoriteMovies.imageSize == 1){
             Picasso.with(mContext).load(movie.getMovie_poster_path()).resize(200,480).into(holder.thumbnail);
         }else if(PopularMovies.imageSize == 2 || TopRatedMovies.imageSize == 2 || NewMovies.imageSize == 2 || FavoriteMovies.imageSize == 2){
-            Picasso.with(mContext).load(movie.getMovie_poster_path()).resize(200,400).into(holder.thumbnail);
+            Picasso.with(mContext).load(movie.getMovie_poster_path()).resize(200,580).into(holder.thumbnail);
         }else if(PopularMovies.imageSize == 4 || TopRatedMovies.imageSize == 4 || NewMovies.imageSize == 4 || FavoriteMovies.imageSize == 4){
-            Picasso.with(mContext).load(movie.getMovie_poster_path()).resize(200,460).into(holder.thumbnail);
+            Picasso.with(mContext).load(movie.getMovie_poster_path()).resize(200,660).into(holder.thumbnail);
         }
         else{
-            Picasso.with(mContext).load(movie.getMovie_poster_path()).resize(200,560).into(holder.thumbnail);
+            Picasso.with(mContext).load(movie.getMovie_poster_path()).resize(180,600).into(holder.thumbnail);
         }
 
         //setAnimation(holder.itemView, position);

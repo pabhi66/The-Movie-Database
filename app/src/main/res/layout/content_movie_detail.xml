@@ -295,6 +295,40 @@
             android:gravity="center"
             android:padding="16dp" />
 
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_marginTop="16dp"-->
+            <!--android:background="#20000000"-->
+            <!--android:padding="8dp" />-->
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:weightSum="1"-->
+            <!--&gt;-->
+
+            <!--<Button-->
+                <!--android:id="@+id/trailer"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Trailer 1"-->
+                <!--android:layout_marginStart="20dp"-->
+
+                 <!--/>-->
+
+            <!--<Button-->
+                <!--android:id="@+id/trailer1"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Trailer 2"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:layout_toEndOf="@+id/trailer"-->
+                 <!--/>-->
+
+        <!--</RelativeLayout>-->
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -306,26 +340,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:weightSum="1"
-            >
+            android:weightSum="1">
 
-            <Button
-                android:id="@+id/trailer"
-                android:layout_width="wrap_content"
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/trailerImage1"/>
+
+            <TextView
+                android:id="@+id/trailer1Detail"
+                android:layout_toEndOf="@+id/trailerImage1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Trailer 1"
-                android:layout_marginStart="20dp"
+                android:padding="16dp"
+                />
 
-                 />
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/trailerImage2"
+                android:layout_below="@id/trailerImage1"/>
 
-            <Button
-                android:id="@+id/trailer1"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/trailer2Detail"
+                android:layout_below="@+id/trailerImage1"
+                android:layout_toEndOf="@+id/trailerImage2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Trailer 2"
-                android:layout_centerInParent="true"
-                android:layout_toEndOf="@+id/trailer"
-                 />
+                android:padding="16dp"
+                />
 
         </RelativeLayout>
 

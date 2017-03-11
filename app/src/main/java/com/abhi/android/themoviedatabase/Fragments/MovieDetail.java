@@ -2,13 +2,11 @@ package com.abhi.android.themoviedatabase.Fragments;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -38,6 +36,8 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,11 +70,14 @@ public class MovieDetail extends Fragment implements LoaderManager.LoaderCallbac
     TextView plot;
     @BindView(R.id.tagline) TextView tagline;
     @BindView(R.id.duration) TextView runtime;
-    @BindView(R.id.trailer) Button trailer_button;
-    @BindView(R.id.trailer1) Button trailer_button2;
+//    @BindView(R.id.trailer) Button trailer_button;
+//    @BindView(R.id.trailer1) Button trailer_button2;
     @BindView(R.id.reviews)
     TextView reviews;
-
+    @BindView(R.id.trailer1Detail) TextView trailer1Detail;
+    @BindView(R.id.trailer2Detail) TextView trailer2Detail;
+    @BindView(R.id.trailerImage1) ImageView trailerImage1;
+    @BindView(R.id.trailerImage2) ImageView trailerImage2;
     @BindView(R.id.genres) TextView genres;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -166,7 +169,7 @@ public class MovieDetail extends Fragment implements LoaderManager.LoaderCallbac
 
 
 
-
+            /* //Trailer button clicked
             trailer_button.setOnClickListener(new View.OnClickListener(){
 
                 @Override
@@ -181,6 +184,7 @@ public class MovieDetail extends Fragment implements LoaderManager.LoaderCallbac
                     launchTrailer(trailer2);
                 }
             });
+            */
 
 
         } catch (JSONException e) {
@@ -212,7 +216,11 @@ public class MovieDetail extends Fragment implements LoaderManager.LoaderCallbac
         final CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) view.findViewById(R.id.toolbar_layout);
 
-        collapsingToolbar.setTitle(movie_name);
+        try {
+            collapsingToolbar.setTitle(movie.getString("original_title"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         AppBarLayout appBarLayout = (AppBarLayout) view.findViewById(R.id.app_bar);
         appBarLayout.setExpanded(true);
 
@@ -282,14 +290,50 @@ public class MovieDetail extends Fragment implements LoaderManager.LoaderCallbac
 
             try {
                 String[] result = Utils.getPathsFromJSON(data, "key");
+                String[] titles = Utils.getPathsFromJSON(data,"name");
+
+                String imageUrl = "";
+
                 String trailer;
                 if (result.length >= 1) {
                     trailer = TinyUrls.youtube + result[0];
                     trailer1 = trailer;
+
+                    //set image title
+                    trailer1Detail.setText(titles[0]);
+
+                    //set image to video
+                    imageUrl = TinyUrls.youtubeImage + result[0] + "/0.jpg";
+                    Picasso.with(getContext()).load(imageUrl).into(trailerImage1);
+
+                    trailerImage1.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            launchTrailer(trailer1);
+                        }
+                    });
                 }
                 if (result.length >= 2) {
                     trailer = TinyUrls.youtube + result[1];
                     trailer2 = trailer;
+
+                    //set trailer title
+                    trailer2Detail.setText(titles[1]);
+
+                    //set trailer image
+                    imageUrl = TinyUrls.youtubeImage + result[1] + "/0.jpg";
+                    Picasso.with(getContext()).load(imageUrl).into(trailerImage2);
+
+                    trailerImage2.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            launchTrailer(trailer2);
+                        }
+                    });
+
+
                 }
 
             } catch (JSONException e) {
@@ -305,7 +349,7 @@ public class MovieDetail extends Fragment implements LoaderManager.LoaderCallbac
                 } else {
                     StringBuilder sb = new StringBuilder();
                     for (int i = 0; i < review.length; i++) {
-                        sb.append(authors[i]).append(": ").append(review[i]).append("\n===============================\n");
+                        sb.append(authors[i]).append("\n\n").append(review[i]).append("\n\n");
                     }
 
                     reviews.setText(sb.toString());
